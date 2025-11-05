@@ -7,169 +7,109 @@ import java.awt.*;
 
 /**
  * Ventana para mostrar estadísticas de la colección.
- * Responsabilidad: Mostrar información sobre la colección.
+ * Hereda estilo y botones base de VentanaBase.
+ * 
+ * @author BN3K
+ * @version 2.0
  */
-public class EstadisticasVista extends JDialog {
-    
+public class EstadisticasVista extends VentanaBase {
+
     private ColeccionVinilos coleccion;
-    private JButton btnCerrar;
-    
+
     public EstadisticasVista(JFrame parent, GestorColeccion gestor) {
-        super(parent, "Estadísticas de la Colección", true);
+        super(parent, "Estadísticas de la Colección");
         this.coleccion = gestor.getColeccion();
         inicializarComponentes();
-        configurarVentana();
     }
-    
+
     private void inicializarComponentes() {
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        panel.setBackground(TemaColores.FONDO_PRINCIPAL);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
-        // título
-        JPanel panelTitulo = new JPanel();
-        panelTitulo.setBackground(TemaColores.FONDO_PRINCIPAL);
-        JLabel lblTitulo = new JLabel("Estadísticas de la Colección");
+        JPanel panelCentral = new JPanel();
+        panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
+        panelCentral.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        JLabel lblTitulo = new JLabel("📊 Estadísticas de la Colección");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
         lblTitulo.setForeground(TemaColores.BTN_AVISO);
-        panelTitulo.add(lblTitulo);
-        
-        // estadísticas
-        JPanel panelEstadisticas = crearPanelEstadisticas();
-        
-        // botones
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelBotones.setBackground(TemaColores.FONDO_PRINCIPAL);
-        
-        btnCerrar = crearBoton("Cerrar", TemaColores.BTN_SECUNDARIO);
-        btnCerrar.addActionListener(e -> dispose());
-        panelBotones.add(btnCerrar);
-        
-        panel.add(panelTitulo, BorderLayout.NORTH);
-        panel.add(panelEstadisticas, BorderLayout.CENTER);
-        panel.add(panelBotones, BorderLayout.SOUTH);
-        
-        add(panel);
-    }
-    
-    private JPanel crearPanelEstadisticas() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(TemaColores.FONDO_SECUNDARIO);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
-        
+        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentral.add(lblTitulo);
+        panelCentral.add(Box.createRigidArea(new Dimension(0, 20)));
+
         int totalVinilos = coleccion.obtenerCantidadVinilos();
-        int espaciosDisponibles = coleccion.obtenerEspaciosDisponibles();
         int capacidadMaxima = ColeccionVinilos.getCapacidadMaxima();
-        double porcentajeOcupacion = (double) totalVinilos / capacidadMaxima * 100;
-        
-        panel.add(crearEtiquetaEstadistica("Total de Vinilos:", 
-            String.valueOf(totalVinilos), TemaColores.BTN_PRIMARIO));
-        panel.add(Box.createRigidArea(new Dimension(0, 15)));
-        
-        panel.add(crearEtiquetaEstadistica("Espacios Disponibles:", 
-            String.valueOf(espaciosDisponibles), TemaColores.BTN_EXITO));
-        panel.add(Box.createRigidArea(new Dimension(0, 15)));
-        
-        panel.add(crearEtiquetaEstadistica("Capacidad Máxima:", 
-            String.valueOf(capacidadMaxima), TemaColores.BTN_SECUNDARIO));
-        panel.add(Box.createRigidArea(new Dimension(0, 15)));
-        
-        panel.add(crearEtiquetaEstadistica("Ocupación:", 
-            String.format("%.1f%%", porcentajeOcupacion), TemaColores.BTN_AVISO));
-        panel.add(Box.createRigidArea(new Dimension(0, 20)));
-        
-        // barra
-        JProgressBar barraProgreso = new JProgressBar(0, capacidadMaxima);
-        barraProgreso.setValue(totalVinilos);
-        barraProgreso.setStringPainted(true);
-        barraProgreso.setString(totalVinilos + " / " + capacidadMaxima);
-        barraProgreso.setFont(new Font("Arial", Font.BOLD, 12));
-        barraProgreso.setPreferredSize(new Dimension(400, 30));
-        barraProgreso.setMaximumSize(new Dimension(400, 30));
-        barraProgreso.setBackground(TemaColores.FONDO_TERCARIO);
-        
-        if (porcentajeOcupacion < 50) {
-            barraProgreso.setForeground(TemaColores.BTN_EXITO);
-        } else if (porcentajeOcupacion < 80) {
-            barraProgreso.setForeground(TemaColores.BTN_AVISO);
-        } else {
-            barraProgreso.setForeground(TemaColores.BTN_PELIGRO);
-        }
-        
-        panel.add(barraProgreso);
-        
-        // estado
-        panel.add(Box.createRigidArea(new Dimension(0, 20)));
-        String estado;
-        Color colorEstado;
-        
-        if (coleccion.estaVacia()) {
-            estado = "La colección está vacía";
-            colorEstado = TemaColores.TEXTO_SECUNDARIO;
-        } else if (coleccion.estaLlena()) {
-            estado = "La colección está llena";
-            colorEstado = TemaColores.BTN_PELIGRO;
-        } else if (porcentajeOcupacion > 80) {
-            estado = "La colección está casi llena";
-            colorEstado = TemaColores.BTN_AVISO;
-        } else {
-            estado = "La colección tiene espacio disponible";
-            colorEstado = TemaColores.BTN_EXITO;
-        }
-        
-        JLabel lblEstado = new JLabel(estado);
+        int disponibles = coleccion.obtenerEspaciosDisponibles();
+        double porcentaje = (double) totalVinilos / capacidadMaxima * 100;
+
+        panelCentral.add(crearEtiquetaEstadistica("📀 Total de Vinilos:", String.valueOf(totalVinilos), TemaColores.BTN_PRIMARIO));
+        panelCentral.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelCentral.add(crearEtiquetaEstadistica("✅ Espacios Disponibles:", String.valueOf(disponibles), TemaColores.BTN_EXITO));
+        panelCentral.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelCentral.add(crearEtiquetaEstadistica("📦 Capacidad Máxima:", String.valueOf(capacidadMaxima), TemaColores.BTN_SECUNDARIO));
+        panelCentral.add(Box.createRigidArea(new Dimension(0, 15)));
+        panelCentral.add(crearEtiquetaEstadistica("📈 Ocupación:", String.format("%.1f%%", porcentaje), TemaColores.BTN_AVISO));
+        panelCentral.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Barra de progreso
+        JProgressBar barra = new JProgressBar(0, capacidadMaxima);
+        barra.setValue(totalVinilos);
+        barra.setStringPainted(true);
+        barra.setString(totalVinilos + " / " + capacidadMaxima);
+        barra.setPreferredSize(new Dimension(400, 30));
+        barra.setMaximumSize(new Dimension(400, 30));
+        barra.setFont(new Font("Arial", Font.BOLD, 12));
+
+        if (porcentaje < 50)
+            barra.setForeground(TemaColores.BTN_EXITO);
+        else if (porcentaje < 80)
+            barra.setForeground(TemaColores.BTN_AVISO);
+        else
+            barra.setForeground(TemaColores.BTN_PELIGRO);
+
+        panelCentral.add(barra);
+        panelCentral.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Estado final
+        JLabel lblEstado = new JLabel(obtenerEstadoTexto(porcentaje));
         lblEstado.setFont(new Font("Arial", Font.BOLD, 14));
-        lblEstado.setForeground(colorEstado);
+        lblEstado.setForeground(obtenerColorEstado(porcentaje));
         lblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(lblEstado);
-        
-        return panel;
+        panelCentral.add(lblEstado);
+
+        JPanel panelBotones = new JPanel();
+        panelBotones.setBackground(TemaColores.FONDO_PRINCIPAL);
+        panelBotones.add(crearBotonCerrar());
+
+        panelPrincipal.add(panelCentral, BorderLayout.CENTER);
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
     }
-    
-    private JPanel crearEtiquetaEstadistica(String label, String valor, Color color) {
-        JPanel panel = new JPanel(new BorderLayout(10, 0));
-        panel.setBackground(TemaColores.FONDO_SECUNDARIO);
-        panel.setMaximumSize(new Dimension(400, 30));
-        
-        JLabel lblLabel = new JLabel(label);
-        lblLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        lblLabel.setForeground(TemaColores.TEXTO_PRIMARIO);
-        
+
+    private JPanel crearEtiquetaEstadistica(String titulo, String valor, Color color) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(TemaColores.FONDO_PRINCIPAL);
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 15));
+        lblTitulo.setForeground(TemaColores.TEXTO_PRIMARIO);
+
         JLabel lblValor = new JLabel(valor);
-        lblValor.setFont(new Font("Arial", Font.BOLD, 20));
+        lblValor.setFont(new Font("Arial", Font.BOLD, 18));
         lblValor.setForeground(color);
-        
-        panel.add(lblLabel, BorderLayout.WEST);
+
+        panel.add(lblTitulo, BorderLayout.WEST);
         panel.add(lblValor, BorderLayout.EAST);
         return panel;
     }
 
-    private JButton crearBoton(String texto, Color color) {
-        JButton boton = new JButton(texto);
-        boton.setFont(new Font("Arial", Font.BOLD, 14));
-        boton.setBackground(color);
-        boton.setForeground(Color.WHITE);
-        boton.setFocusPainted(false);
-        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        boton.setPreferredSize(new Dimension(120, 40));
-        boton.setBorderPainted(false);
-
-        boton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                boton.setBackground(color.brighter());
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                boton.setBackground(color);
-            }
-        });
-
-        return boton;
+    private String obtenerEstadoTexto(double porcentaje) {
+        if (porcentaje == 0) return "⚪ La colección está vacía";
+        if (porcentaje >= 100) return "🔴 La colección está llena";
+        if (porcentaje >= 80) return "🟡 La colección está casi llena";
+        return "🟢 La colección tiene espacio disponible";
     }
-    
-    private void configurarVentana() {
-        setSize(500, 450);
-        setLocationRelativeTo(getParent());
-        setResizable(false);
+
+    private Color obtenerColorEstado(double porcentaje) {
+        if (porcentaje == 0) return TemaColores.TEXTO_SECUNDARIO;
+        if (porcentaje >= 100) return TemaColores.BTN_PELIGRO;
+        if (porcentaje >= 80) return TemaColores.BTN_AVISO;
+        return TemaColores.BTN_EXITO;
     }
 }

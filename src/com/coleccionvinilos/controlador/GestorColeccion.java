@@ -5,13 +5,6 @@ import com.coleccionvinilos.servicio.ColeccionVinilos;
 import java.util.Scanner;
 import java.util.List;
 
-/**
- * Clase que maneja la interfaz de usuario y coordina las operaciones.
- * Responsabilidad: Interactuar con el usuario y gestionar el flujo de la aplicación.
- * 
- * @author BN3K-WEB
- * @version 1.0
- */
 public class GestorColeccion {
     private ColeccionVinilos coleccion;
     private Scanner scanner;

@@ -53,12 +53,12 @@ public class MenuPrincipalVista extends JFrame {
         JPanel panel = new JPanel(new GridLayout(6, 1, 10, 15));
         panel.setBackground(TemaColores.FONDO_SECUNDARIO);
 
-        btnAgregar = crearBoton("Agregar Vinilo", TemaColores.BTN_PRIMARIO);
-        btnBuscar = crearBoton("Buscar Vinilo", TemaColores.BTN_EXITO);
-        btnEliminar = crearBoton("Eliminar Vinilo", TemaColores.BTN_PELIGRO);
-        btnEstadisticas = crearBoton("Ver Estadísticas", TemaColores.BTN_AVISO);
-        btnListar = crearBoton("Listar Vinilos", TemaColores.BTN_VIOLETA);
-        btnSalir = crearBoton("Salir", TemaColores.BTN_SECUNDARIO);
+        btnAgregar = CrearBotones.crearBotonMenu("Agregar Vinilo", TemaColores.BTN_PRIMARIO);
+        btnBuscar = CrearBotones.crearBotonMenu("Buscar Vinilo", TemaColores.BTN_EXITO);
+        btnEliminar = CrearBotones.crearBotonMenu("Eliminar Vinilo", TemaColores.BTN_PELIGRO);
+        btnEstadisticas = CrearBotones.crearBotonMenu("Ver Estadísticas", TemaColores.BTN_AVISO);
+        btnListar = CrearBotones.crearBotonMenu("Listar Vinilos", TemaColores.BTN_VIOLETA);
+        btnSalir = CrearBotones.crearBotonMenu("Salir", TemaColores.BTN_SECUNDARIO);
 
         btnAgregar.addActionListener(e -> new AgregarViniloVista(this, gestor).setVisible(true));
         btnBuscar.addActionListener(e -> new BuscarViniloVista(this, gestor).setVisible(true));
@@ -80,34 +80,12 @@ public class MenuPrincipalVista extends JFrame {
         JPanel panel = new JPanel();
         panel.setBackground(TemaColores.FONDO_SECUNDARIO);
 
-        JLabel lblFooter = new JLabel("v2.2 - Sistema de Gestión de Vinilos");
+        JLabel lblFooter = new JLabel("v1.0 - Sistema de Gestión de Vinilos");
         lblFooter.setFont(new Font("Arial", Font.ITALIC, 12));
         lblFooter.setForeground(TemaColores.TEXTO_SECUNDARIO);
         panel.add(lblFooter);
         return panel;
     }
-
-    private JButton crearBoton(String texto, Color color) {
-        JButton boton = new JButton(texto);
-        boton.setFont(new Font("Arial", Font.BOLD, 16));
-        boton.setForeground(Color.WHITE);
-        boton.setBackground(color);
-        boton.setFocusPainted(false);
-        boton.setBorderPainted(false);
-        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        boton.setPreferredSize(new Dimension(400, 50));
-
-        boton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                boton.setBackground(color.brighter());
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                boton.setBackground(color);
-            }
-        });
-        return boton;
-    }
-
     private void salir() {
         int confirmacion = JOptionPane.showConfirmDialog(
             this, "¿Está seguro que desea salir?", "Confirmar Salida",

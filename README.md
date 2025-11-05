@@ -1,21 +1,18 @@
-# Sistema de Gestión de Colección de Vinilos
+# 🎵 Sistema de Colección de Vinilos
 
-Sistema desarrollado en Java para gestionar una colección de hasta 100 vinilos.
+Aplicación de escritorio desarrollada en **Java (Swing)** para gestionar una colección de vinilos.  
+Permite agregar, buscar, eliminar, listar y visualizar estadísticas de los vinilos almacenados.
 
-## Características
-- Agregar vinilos (artista, disco, año)
-- Buscar vinilos por artista y/o disco
-- Ver estadísticas de la colección
-- Eliminar vinilos
-- Listar toda la colección
+---
 
-## Requisitos
-- Java 8 o superior
-- VS Code con Extension Pack for Java
+## Características principales
 
-## Ejecución
-1. Abrir el proyecto en VS Code
-2. Presionar F5 o Run > Start Debugging
-3. O usar la terminal: `java -cp bin com.coleccionvinilos.Main`
+- **Agregar vinilos** con datos de artista, disco y año.  
+- **Buscar vinilos** por nombre o artista.  
+- **Eliminar vinilos** de la colección.  
+- **Listar todos los vinilos** registrados.  
+- **Ver estadísticas** (total, disponibles, ocupación, etc).  
+- **Interfaz moderna con modo oscuro** (`TemaColores` centraliza la paleta de colores).
 
-## Estructura del Proyecto
+---
+
